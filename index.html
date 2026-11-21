@@ -222,6 +222,8 @@ body.modal-open{overflow:hidden}
 .cf-foot{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .cf-send{background:#0a0a0a;color:#fff;border:2px solid #0a0a0a;padding:12px 28px;font:600 14px Poppins,Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;touch-action:manipulation;transition:transform .22s ease,box-shadow .22s ease,background .22s ease,color .22s ease}
 .cf-send:hover,.cf-send:focus-visible{background:#fff;color:#0a0a0a;transform:translateY(-3px);box-shadow:0 5px 0 #0a0a0a;outline:none}
+.cf-send:disabled{opacity:.6;cursor:wait;transform:none;box-shadow:none}
+.cform .cf-status a{color:#fff}
 .cform .cf-status{margin:0;font-size:13px;font-weight:500;min-height:1.2em}
 @media(max-width:600px){.cf-row{grid-template-columns:1fr}}
 </style>
@@ -399,6 +401,7 @@ m28.28,87.95h-27.76v-18.94c-7.76,11.15-21.88,22.18-44.75,22.18-36.78,0-61.36-30.
 </div></section>
 
 <footer id="contact"><div class="smile" aria-hidden="true">:]</div><div class="wrap"><div class="tag" style="color:#fff">Contact</div><h2>Travaillons<br>ensemble.</h2><a href="mailto:leo.baly.44@gmail.com">leo.baly.44@gmail.com</a><form class="cform" id="contactForm" novalidate>
+<input type="checkbox" name="botcheck" id="cf-bot" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
 <div class="cf-row"><label for="cf-name">Nom<input id="cf-name" name="name" type="text" autocomplete="name" required maxlength="80"></label>
 <label for="cf-mail">E-mail<input id="cf-mail" name="email" type="email" autocomplete="email" required maxlength="120"></label></div>
 <label for="cf-subject">Objet<select id="cf-subject" name="subject"><option>Proposition de stage</option><option>Projet / collaboration</option><option>Question</option><option>Autre</option></select></label>
@@ -683,18 +686,27 @@ open_("Projets personnels");
 
 <script>
 (()=>{
-  // Formulaire de contact : ouvre l'application mail avec le message prêt à envoyer
+  // Formulaire de contact : envoi direct par Web3Forms (le message arrive dans ma boîte mail)
+  const KEY='7780adf2-00dc-44d5-8c43-183dd3be2545';
   const f=document.getElementById('contactForm'); if(!f) return;
-  const st=document.getElementById('cfStatus');
-  f.addEventListener('submit',e=>{
+  const st=document.getElementById('cfStatus'),btn=f.querySelector('.cf-send');
+  const mailto=(name,mail,subj,msg)=>'mailto:leo.baly.44@gmail.com?subject='+encodeURIComponent('[Portfolio] '+subj+' – '+name)+'&body='+encodeURIComponent(msg+'\n\n— '+name+' ('+mail+')');
+  f.addEventListener('submit',async e=>{
     e.preventDefault();
     const name=f.name.value.trim(),mail=f.email.value.trim(),subj=f.subject.value,msg=f.message.value.trim();
     let ok=true;
     [[f.name,!!name],[f.email,/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)],[f.message,!!msg]].forEach(([el,v])=>{el.classList.toggle('bad',!v);el.setAttribute('aria-invalid',v?'false':'true');if(!v&&ok){el.focus();ok=false}});
     if(!ok){st.textContent='Merci de compléter les champs en surbrillance.';return}
-    const body=msg+'\n\n— '+name+' ('+mail+')';
-    st.textContent="Ton application mail va s'ouvrir avec le message prêt à envoyer.";
-    window.location.href='mailto:leo.baly.44@gmail.com?subject='+encodeURIComponent('[Portfolio] '+subj+' – '+name)+'&body='+encodeURIComponent(body);
+    if(document.getElementById('cf-bot').checked) return; // robot détecté
+    btn.disabled=true;st.textContent='Envoi en cours…';
+    try{
+      const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:KEY,name:name,email:mail,subject:'[Portfolio] '+subj+' – '+name,message:msg,from_name:'Portfolio OFFYXX'})});
+      const d=await r.json();
+      if(r.ok&&d.success){st.textContent='Message envoyé, merci ! Je te réponds très vite.';f.reset()}
+      else throw new Error(d.message||'Erreur');
+    }catch(err){
+      st.innerHTML='Oups, l’envoi a échoué. <a href="'+mailto(name,mail,subj,msg)+'">Envoyer par e-mail à la place</a>.';
+    }finally{btn.disabled=false}
   });
   f.addEventListener('input',e=>{e.target.classList.remove('bad');e.target.removeAttribute('aria-invalid')});
 })();
