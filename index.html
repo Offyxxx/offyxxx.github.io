@@ -244,6 +244,13 @@ body.modal-open{overflow:hidden}
 .vw-x{background:none;border:2px solid #000;color:#000;font:600 12px Poppins,Arial,sans-serif;padding:3px 10px;cursor:pointer}
 .vw-x:hover,.vw-x:focus-visible{background:#000;color:#fff;outline:none}
 .vw-box img{display:block;min-height:0;max-width:92vw;max-height:calc(92vh - 80px);width:auto;height:auto;object-fit:contain;background:#fff;margin:0 auto}
+/* Carte de localisation */
+#localisation h2 em{font-style:normal;color:var(--blue)}
+.mapbox{border:2px solid var(--fg);background:#111;box-shadow:8px 8px 0 var(--blue)}
+.mapbox iframe{display:block;width:100%;height:420px;border:0}
+.maplink{margin:22px 0 0;font-size:14px;font-weight:600}
+.maplink a{border-bottom:2px solid var(--blue);padding-bottom:2px}.maplink a:hover{color:var(--blue)}
+@media(max-width:600px){.mapbox iframe{height:340px}}
 /* Formulaire de contact */
 .cform{position:relative;z-index:1;max-width:640px;margin:28px 0 8px;display:flex;flex-direction:column;gap:14px;text-align:left}
 .cf-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -466,7 +473,14 @@ m28.28,87.95h-27.76v-18.94c-7.76,11.15-21.88,22.18-44.75,22.18-36.78,0-61.36-30.
 <ul><li>Moteurs de recherche <span>QWANT · DUCKDUCKGO</span></li><li>Navigateur <span>ZEN BROWSER</span></li><li>Mail <span>PROTON MAIL</span></li><li>VPN <span>PROTON VPN</span></li><li>Drive <span>INFOMANIAK · PROTON DRIVE</span></li><li>Hébergement <span>GITHUB</span></li><li>Logiciels <span>OPEN SOURCE EN PRIORITÉ</span></li></ul>
 </div></section>
 
-<footer id="contact"><div class="smile" aria-hidden="true">:]</div><div class="wrap"><div class="tag" style="color:#fff">Contact</div><h2>Travaillons<br>ensemble.</h2><a href="mailto:leo.baly.44@gmail.com">leo.baly.44@gmail.com</a><form class="cform" id="contactForm" novalidate>
+<section id="localisation"><div class="wrap">
+<div class="tag">Localisation</div><h2>Où me <em>trouver</em></h2>
+<p style="color:var(--mute);margin:-12px 0 24px">Mon lycée et les lieux où je réside sont indiqués sur la carte. Clique sur un repère pour voir le détail.</p>
+<div class="mapbox"><iframe title="Carte : mon lycée et mes lieux de résidence" src="https://umap.openstreetmap.fr/fr/map/carte-sans-nom_1488443?scaleControl=false&miniMapControl=false&scrollWheelZoom=false&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=true" loading="lazy" allowfullscreen allow="geolocation"></iframe></div>
+<p class="maplink"><a href="https://umap.openstreetmap.fr/fr/map/carte-sans-nom_1488443?scaleControl=false&miniMapControl=false&scrollWheelZoom=true&zoomControl=true&editMode=disabled&moreControl=true&searchControl=null&tilelayersControl=null&embedControl=null&datalayersControl=true&onLoadPanel=none&captionBar=false&captionMenus=true" target="_blank" rel="noopener">Voir en plein écran ↗</a></p>
+</div></section>
+
+<footer id="contact"><div class="smile" aria-hidden="true">:]</div><div class="wrap"><div class="tag" style="color:#fff">Contact</div><h2>Travaillons<br>ensemble.</h2><form class="cform" id="contactForm" novalidate>
 <input type="checkbox" name="botcheck" id="cf-bot" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0" aria-hidden="true">
 <div class="cf-row"><label for="cf-name">Nom<input id="cf-name" name="name" type="text" autocomplete="name" required maxlength="80"></label>
 <label for="cf-mail">E-mail<input id="cf-mail" name="email" type="email" autocomplete="email" required maxlength="120"></label></div>
